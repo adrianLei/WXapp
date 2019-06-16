@@ -4,4 +4,13 @@ class: extendable object; template for components; hold: key-value pair, functio
 constructor: 1st thing that runs; setup method;
 OOP: object oriented programming;
 
+git commands:
+git clone {address}
+
+npm install;
+git init
+git add .
+git commit -m'(message)'
+git push
+
 
