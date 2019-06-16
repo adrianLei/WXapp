@@ -1,0 +1,7 @@
+props: passed into JSX;
+state: info about components; changeable; what is usually passed down;
+class: extendable object; template for components; hold: key-value pair, functions and properties
+constructor: 1st thing that runs; setup method;
+OOP: object oriented programming;
+
+
