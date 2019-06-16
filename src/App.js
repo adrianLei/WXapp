@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import config from './config'
-import {Button, Form} from 'semantic-ui-react'
+import config from './config';
+import {Button, Form, Input, Tab} from 'semantic-ui-react'
 
 
 
@@ -15,7 +15,9 @@ class App extends React.Component{
 
     this.state = {
       wxweatherData: {},
-      city: ''
+      city: '',
+      fetching: false,
+      error: false
 
     }
 this.onUpdateCity = this.onUpdateCity.bind(this)
@@ -27,9 +29,13 @@ this.submit = this.submit.bind(this)
     var self =this
     var cityName = city || 'chengdu'
     var unityType = unit || 'metric'
+
+this.setState({
+  fetching: true
+})
     axios({
       method: 'get',
-      url: 'http://api.openweathermap.org/data/2.5/forecast',
+      url: 'http://api.openweathermap.org/data/2.5/weather',
       params: {
         q:cityName,
         units: unityType,
@@ -39,11 +45,22 @@ this.submit = this.submit.bind(this)
     })
     .then(function(res){
       const data = res.data
-      self.setState({wxweatherData: data})
+      self.setState({
+        wxweatherData: data.main,
+        city:'',
+        fetching: false,
+        error: false
+
+
+      })
       console.log(res)
     })
     .catch(function(err){
       console.log(err)
+      self.setState({
+        error: true,
+        fetching: false
+      })
 
     })
 
@@ -65,13 +82,27 @@ this.setState({city: ev.target.value})
   render(){
     console.log('this is render')
     console.log(this.props)
-    return<Form>
-      <Form.Field>
-        <label>Enter CityName</label>
-        <input placeholder = 'city name' value={this.state.city} onChange={this.onUpdateCity} type='test'/>
-      </Form.Field>
-      <Button onClick={this.submit}>Submit</Button>
-    </Form>
+    console.log(this.state.fetching)
+    const fetching = this.state.fetching
+    const error = this.state.error
+    const temp =this.state.wxweatherData.temp
+  const humidity =this.state.wxweatherData.humidity
+  const pressure=this.state.wxweatherData.pressure
+  const panes = [
+    { menuItem: 'Temperature', render: () => <Tab.Pane>{temp}</Tab.Pane> },
+    { menuItem: 'Humidity', render: () => <Tab.Pane>{humidity}</Tab.Pane> },
+    { menuItem: 'Pressure', render: () => <Tab.Pane>{pressure}</Tab.Pane> },
+  ]
+    return<div><Form>
+    <Form.Input label='Enter CItyname' error={error} disabled={fetching} loading={fetching} placeholder = 'city name' value={this.state.city} onChange={this.onUpdateCity} type='test' />
+
+    <Button onClick={this.submit}>Submit</Button>
+    <Tab panes={panes} />
+  </Form>
+
+  
+  </div>
+
     // <div>weather<input value={this.state.city} onChange={this.onUpdateCity} type='text'/>
     // <button onClick={this.submit}>Submit</button>
     // </div>

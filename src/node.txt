@@ -13,4 +13,6 @@ git add .
 git commit -m'(message)'
 git push
 
-
+import things:
+1. import (name) from (address)
+2. const (name) = require()
